@@ -35,7 +35,7 @@ def get_message(ID, cityname, name):
                 line_name = i['ln']
                 # 判断是否含有地铁分线
                 if i['la']:
-                    line_name += f"(${i['la']})"
+                    line_name += f"({i['la']})"
 
                 city_code = ID
                 city_name = name
