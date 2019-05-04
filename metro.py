@@ -17,18 +17,26 @@ def get_message(ID, cityname, name):
     result = json.loads(html)
     # import IPython
     # IPython.embed()
-    for i in result['l']:
-        for j in i['st']:
-            # 判断是否含有地铁分线
-            if len(i['la']) > 0:
-                print(name, i['ln'] + '(' + i['la'] + ')', j['n'])
-                with open('metro.csv', 'a+', encoding='gbk') as f:
-                    f.write(','.join([ID, name, f"{i['ln']}({i['la']})", j['n'],
-                                      j['sl']]) + '\n')
-            else:
-                print(name, i['ln'], j['n'])
-                with open('metro.csv', 'a+', encoding='gbk') as f:
-                    f.write(','.join([ID, name, i['ln'], j['n'], j['sl']]) + '\n')
+    with open('metro.csv', 'a+') as f:
+        print('城市行政区划代码', '城市名', '线路id', '线路名', '地铁站名', '经度', '纬度', '所属线路',
+              sep=',', file=f)
+        for i in result['l']:
+            for j in i['st']:
+                line_name = i['ln']
+                # 判断是否含有地铁分线
+                if i['la']:
+                    line_name += i['la']
+                station = {
+                    'cityCode': ID,
+                    'cityName': name,
+                    'lineId': i['ls'],
+                    'lineName': line_name,
+                    'stationName': j['n'],
+                    'stationPosition': j['sl'],
+                    'stationLines': j['r'],
+                }
+                print(*station.values())
+                print(*station.values(), file=f, sep=',')
 
 
 def get_city():
